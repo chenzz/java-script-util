@@ -23,5 +23,11 @@ public class FileUtilTest {
         }
     }
 
+    @Test
+    public void testReadFirstLine() {
+        String firstLine = FileUtil.readFirstLine("/Users/bytedance/Library/Containers/com.coderforart.MWeb3/Data/Library/Application Support/MWebLibrary/docs/15268864325476.md");
+        System.out.println(firstLine);
+    }
+
 
 }

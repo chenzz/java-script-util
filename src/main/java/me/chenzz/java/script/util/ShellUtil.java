@@ -59,6 +59,15 @@ public class ShellUtil {
     }
 
     /**
+     * 执行命令
+     * @param cmdArr 命令Array
+     */
+    public static void exec(String... cmdArr) {
+        exec(cmdArr, StdOutputStrategyEnum.PRINT);
+    }
+
+
+    /**
      * 执行命令，并且返回执行结果
      * @param cmd 命令
      * @return 执行结果
@@ -67,25 +76,31 @@ public class ShellUtil {
         return exec(cmd, StdOutputStrategyEnum.RETURN);
     }
 
-    @SuppressWarnings("deprecation")
+    /**
+     * 执行命令，并且返回执行结果
+     * @param cmdArr 命令
+     * @return 执行结果
+     */
+    public static String execAndGetStdOutput(String... cmdArr) {
+        return exec(cmdArr, StdOutputStrategyEnum.RETURN);
+    }
+
     @SneakyThrows
     private static String exec(String cmd, StdOutputStrategyEnum stdOutputStrategyEnum) {
+        return exec(new String[] {cmd}, stdOutputStrategyEnum);
+    }
 
-        // 0. 预处理
-        if (null == stdOutputStrategyEnum) {
-            stdOutputStrategyEnum = StdOutputStrategyEnum.PRINT;
+    @SneakyThrows
+    private static String exec(String[] cmdArr, StdOutputStrategyEnum stdOutputStrategyEnum) {
+        if (null == cmdArr || 0 == cmdArr.length) {
+            throw new RuntimeException("cmdArr should not null");
         }
 
+        System.out.println("============= 执行命令 开始： " + Arrays.toString(cmdArr));
 
-        System.out.println("============= 执行命令 开始： " + cmd );
-
-        // 1. cmd处理
-        String javaHome;
-        if (null != envMap.get("JAVA_HOME")) {
-            javaHome = envMap.get("JAVA_HOME");
-            if (cmd.startsWith("java ")) {
-                cmd = javaHome + "/bin/" + cmd;
-            }
+        // 1. 预处理
+        if (null == stdOutputStrategyEnum) {
+            stdOutputStrategyEnum = StdOutputStrategyEnum.PRINT;
         }
 
         // 2. path处理
@@ -95,7 +110,13 @@ public class ShellUtil {
         }
 
         // 3. 执行
-        Process process = Runtime.getRuntime().exec(cmd, envArr, file);
+        Process process = null;
+        if (1 == cmdArr.length) {
+            process = Runtime.getRuntime().exec(cmdArr[0], envArr, file);
+        } else {
+            process = Runtime.getRuntime().exec(cmdArr, envArr, file);
+        }
+
 
         // 4. 结果处理
         // 标准输出

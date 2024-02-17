@@ -3,7 +3,9 @@ package me.chenzz.java.script.util;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -29,6 +31,20 @@ public class FileUtil {
     public static String readContent(String filePath) {
         String content = FileUtils.readFileToString(new File(filePath));
         return content;
+    }
+
+    /**
+     * 读取文件第一行文字内容
+     * @param filePath 文件路径
+     * @return 第一行数据内容
+     */
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    @SneakyThrows
+    public static String readFirstLine(String filePath) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String firstLine = br.readLine(); // 读取第一行数据
+            return firstLine;
+        }
     }
 
     /**
