@@ -4,11 +4,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 正则工具类
+ *
  * @author chenzhongzheng
- * @date 2024/02/16
+ * @since 2024/02/16
  */
 public class RegexUtil {
 
+    /**
+     * 根据正则解析变量
+     * @param str 字符串
+     * @param regex 正则
+     * @return 结果
+     */
     public static String extractStr(String str, String regex) {
         AssertUtil.notEmpty(str, "str");
 
@@ -26,6 +34,13 @@ public class RegexUtil {
         }
     }
 
+    /**
+     * 根据正则进行替换
+     * @param str 字符串
+     * @param regex 正则
+     * @param replacement 替换正则
+     * @return 替换之后的结果
+     */
     public static String replace(String str, String regex, String replacement) {
         AssertUtil.notEmpty(str, "str");
 

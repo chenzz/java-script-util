@@ -10,8 +10,10 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
+ * Shell 工具类
+ *
  * @author chenzhongzheng
- * @date 2024/02/16
+ * @since 2024/02/16
  */
 public class ShellUtil {
 
@@ -21,6 +23,10 @@ public class ShellUtil {
     private static final Map<String, String> envMap = new HashMap<>();
 
 
+    /**
+     * 配置环境变量
+     * @param envArrOfExplicitSpecify 环境变量
+     */
     public static void configEnvp(String[] envArrOfExplicitSpecify) {
         String output = execAndGetStdOutput("env");
         String[] envArrOfOrigin = output.split("\n");
@@ -36,14 +42,27 @@ public class ShellUtil {
         }
     }
 
+    /**
+     * 配置执行路径
+     * @param path 路径
+     */
     public static void configPath(String path) {
         ShellUtil.path = path;
     }
 
+    /**
+     * 执行命令
+     * @param cmd 命令
+     */
     public static void exec(String cmd) {
         exec(cmd, StdOutputStrategyEnum.PRINT);
     }
 
+    /**
+     * 执行命令，并且返回执行结果
+     * @param cmd 命令
+     * @return 执行结果
+     */
     public static String execAndGetStdOutput(String cmd) {
         return exec(cmd, StdOutputStrategyEnum.RETURN);
     }

@@ -12,11 +12,18 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
+ * 文件工具类
+ *
  * @author chenzhongzheng
- * @date 2024/02/16
+ * @since 2024/02/16
  */
 public class FileUtil {
 
+    /**
+     * 读取文件内容
+     * @param filePath 文件路径
+     * @return 文件内容
+     */
     @SuppressWarnings({"UnnecessaryLocalVariable", "deprecation"})
     @SneakyThrows
     public static String readContent(String filePath) {
@@ -24,6 +31,12 @@ public class FileUtil {
         return content;
     }
 
+    /**
+     * 找到需要的一行内容
+     * @param filePath 文件路径
+     * @param keyword 关键字
+     * @return 找到的数据行
+     */
     @SneakyThrows
     public static String findOneLine(String filePath, String keyword) {
         AssertUtil.notEmpty(keyword, "keyword");
@@ -40,6 +53,12 @@ public class FileUtil {
         return null;
     }
 
+    /**
+     * 替换文件内容
+     * @param filePath 文件路径
+     * @param originRegex 原始数据
+     * @param replacedStr 替换的数据
+     */
     @SuppressWarnings("deprecation")
     @SneakyThrows
     public static void replaceText(String filePath, String originRegex, String replacedStr) {
@@ -49,6 +68,12 @@ public class FileUtil {
     }
 
 
+    /**
+     * 根据通配符查找文件
+     * @param rootDirPath 根路径
+     * @param wildcardPattern 通配符
+     * @return 文件路径列表
+     */
     @SneakyThrows
     public static List<Path> findFilesRecursivelyByWildcard(String rootDirPath, String wildcardPattern) {
         Path startDir = Paths.get(rootDirPath);
