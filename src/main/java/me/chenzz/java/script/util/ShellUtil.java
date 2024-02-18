@@ -1,6 +1,7 @@
 package me.chenzz.java.script.util;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,7 @@ import java.util.*;
  * @author chenzhongzheng
  * @since 2024/02/16
  */
+@Slf4j
 public class ShellUtil {
 
     private static String path = null;
@@ -32,7 +34,9 @@ public class ShellUtil {
         String[] envArrOfOrigin = output.split("\n");
 
         List<String> mergedEnvList = new ArrayList<>(Arrays.asList(envArrOfOrigin));
-        mergedEnvList.addAll(Arrays.asList(envArrOfExplicitSpecify));
+        if (null != envArrOfExplicitSpecify && 0 != envArrOfExplicitSpecify.length) {
+            mergedEnvList.addAll(Arrays.asList(envArrOfExplicitSpecify));
+        }
 
         ShellUtil.envArr = mergedEnvList.toArray(new String[0]);
 
@@ -40,6 +44,19 @@ public class ShellUtil {
             String[] kvArr = env.split("=");
             envMap.put(kvArr[0], kvArr[1]);
         }
+    }
+
+    /**
+     * 获取环境变量
+     * @param key key
+     * @return value
+     */
+    public static String getEnv(String key) {
+        if (0 == envMap.size()) {
+            configEnvp(null);
+        }
+
+        return envMap.get(key);
     }
 
     /**
@@ -95,8 +112,8 @@ public class ShellUtil {
         if (null == cmdArr || 0 == cmdArr.length) {
             throw new RuntimeException("cmdArr should not null");
         }
-
-        System.out.println("============= 执行命令 开始： " + Arrays.toString(cmdArr));
+        
+        log.info("============= 执行命令 开始： " + Arrays.toString(cmdArr));
 
         // 1. 预处理
         if (null == stdOutputStrategyEnum) {
@@ -127,7 +144,7 @@ public class ShellUtil {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                log.info(line);
             }
         } else {
             // 返回
@@ -139,18 +156,17 @@ public class ShellUtil {
         int exitCode = process.waitFor();
 
         if (0 != exitCode) {
-            System.out.println("=== 程序退出码");
-            System.out.println("exitCode=" + exitCode);
+            log.info("=== 程序退出码");
+            log.info("exitCode=" + exitCode);
         }
 
         String errorOutput = IOUtils.toString(process.getErrorStream());
         if (StringUtils.isNotEmpty(errorOutput)) {
-            System.out.println("=== 注意：错误输出");
-            System.out.println(errorOutput);
+            log.info("=== 注意：错误输出");
+            log.info(errorOutput);
         }
 
-        System.out.println("============= 执行命令 结束");
-        System.out.println();
+        log.info("============= 执行命令 结束");
 
         return normalOutput;
     }
